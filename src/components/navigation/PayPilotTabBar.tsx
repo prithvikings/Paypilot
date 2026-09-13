@@ -37,6 +37,14 @@ const TAB_LABELS: Record<string, string> = {
   profile: "Profile",
 };
 
+const ICONS = {
+  home: { ios: "house", android: "home", web: "home" },
+  plan: { ios: "doc.text", android: "description", web: "description" },
+  ask: { ios: "sparkles", android: "auto_awesome", web: "auto_awesome" },
+  activity: { ios: "clock", android: "schedule", web: "schedule" },
+  profile: { ios: "person", android: "person", web: "person" },
+} as const;
+
 export function PayPilotTabBar({ state, navigation }: PayPilotTabBarProps) {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -60,6 +68,15 @@ export function PayPilotTabBar({ state, navigation }: PayPilotTabBarProps) {
           const isFocused = state.index === state.routes.indexOf(route);
           const color = isFocused ? theme.colors.accent : theme.colors.textMuted;
           const isAsk = route.name === "ask";
+          const icon = isAsk
+            ? ICONS.ask
+            : route.name === "index"
+              ? ICONS.home
+              : route.name === "plan"
+                ? ICONS.plan
+                : route.name === "activity"
+                  ? ICONS.activity
+                  : ICONS.profile;
 
           const onPress = () => {
             const event = navigation.emit({
@@ -94,21 +111,21 @@ export function PayPilotTabBar({ state, navigation }: PayPilotTabBarProps) {
                 <View
                   style={[
                     styles.askOuter,
-                    {
-                      backgroundColor: theme.colors.accentSoft,
-                    },
+                    { backgroundColor: theme.colors.accentSoft },
                   ]}
                 >
                   <View
                     style={[
                       styles.askButton,
                       {
-                        backgroundColor: isFocused ? theme.colors.accent : theme.colors.surfaceSecondary,
+                        backgroundColor: isFocused
+                          ? theme.colors.accent
+                          : theme.colors.surfaceSecondary,
                       },
                     ]}
                   >
                     <SymbolView
-                      name="sparkles"
+                      name={icon}
                       size={26}
                       tintColor={isFocused ? theme.colors.white : theme.colors.accent}
                     />
@@ -116,10 +133,7 @@ export function PayPilotTabBar({ state, navigation }: PayPilotTabBarProps) {
                 </View>
               ) : (
                 <View style={styles.iconWrapper}>
-                  {route.name === "index" && <SymbolView name="house" size={24} tintColor={color} />}
-                  {route.name === "plan" && <SymbolView name="doc.text" size={24} tintColor={color} />}
-                  {route.name === "activity" && <SymbolView name="clock" size={24} tintColor={color} />}
-                  {route.name === "profile" && <SymbolView name="person" size={24} tintColor={color} />}
+                  <SymbolView name={icon} size={24} tintColor={color} />
                 </View>
               )}
 
