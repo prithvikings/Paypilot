@@ -16,8 +16,12 @@ type TabState = {
 };
 
 type TabNavigation = {
-  emit: (event: { type: "tabPress" | "tabLongPress"; target: string; canPreventDefault?: boolean }) => {
-    defaultPrevented: boolean;
+  emit: (event: {
+    type: "tabPress" | "tabLongPress";
+    target: string;
+    canPreventDefault?: boolean;
+  }) => {
+    defaultPrevented?: boolean;
   };
   navigate: (name: string, params?: object) => void;
 };
