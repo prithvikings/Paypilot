@@ -1,9 +1,11 @@
 import type { StyleProp, TextStyle } from "react-native";
 import { Text, type TextProps, type TextTone } from "@/components/ui/Text";
 
-export type CurrencyTextProps = Omit<TextProps, "children"> & {
+type CurrencyTone = TextTone | "auto";
+
+export type CurrencyTextProps = Omit<TextProps, "children" | "tone"> & {
   amount: number;
-  tone?: TextTone | "auto";
+  tone?: CurrencyTone;
   style?: StyleProp<TextStyle>;
 };
 
@@ -19,7 +21,8 @@ export function CurrencyText({
   tone = "primary",
   ...props
 }: CurrencyTextProps) {
-  const resolvedTone = tone === "auto" ? (amount < 0 ? "danger" : "primary") : tone;
+  const resolvedTone: TextTone =
+    tone === "auto" ? (amount < 0 ? "danger" : "primary") : tone;
 
   return (
     <Text {...props} variant={variant} tone={resolvedTone}>
