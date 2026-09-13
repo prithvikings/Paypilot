@@ -10,34 +10,71 @@ type ExpenseBreakdownProps = {
   expenses: readonly DemoExpense[];
 };
 
+const accents = [
+  "#F56F8C",
+  "#F7A735",
+  "#3E8BEA",
+  "#8967E8",
+  "#4CCB9A",
+  "#E889B6",
+  "#6B9FE8",
+  "#9AA6B8",
+] as const;
+
 export function ExpenseBreakdown({ total, expenses }: ExpenseBreakdownProps) {
   const { theme } = useTheme();
-  const maxAmount = Math.max(...expenses.map((expense) => expense.amount), 1);
 
   return (
-    <View style={{ gap: theme.spacing.md }}>
-      <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" }}>
-        <View>
-          <Text variant="heading2">Spending</Text>
-          <Text variant="bodySmall" tone="secondary" style={{ marginTop: theme.spacing.xs }}>Where your ₹27,000 monthly expenses go.</Text>
-        </View>
-        <CurrencyText amount={total} variant="financialMedium" />
+    <Card style={{ padding: 14, flex: 1, minWidth: 0, borderRadius: 20 }}>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+        <Text variant="heading3">Expense Breakdown</Text>
+        <Text variant="bodySmall" tone="accent">›</Text>
       </View>
-      <Card style={{ padding: theme.spacing.lg }}>
-        <View style={{ gap: theme.spacing.md }}>
-          {expenses.map((expense) => (
-            <View key={expense.id}>
-              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: theme.spacing.xs }}>
-                <Text variant="bodySmall">{expense.category}</Text>
-                <CurrencyText amount={expense.amount} variant="bodySmall" />
-              </View>
-              <View style={{ height: 6, borderRadius: 3, backgroundColor: theme.colors.surfaceSecondary, overflow: "hidden" }}>
-                <View style={{ width: `${Math.max((expense.amount / maxAmount) * 100, 3)}%`, height: "100%", borderRadius: 3, backgroundColor: theme.colors.accent }} />
-              </View>
-            </View>
-          ))}
-        </View>
-      </Card>
-    </View>
+
+      <CurrencyText amount={total} variant="financialMedium" style={{ marginTop: 10 }} />
+      <Text variant="caption" tone="muted">Monthly expenses</Text>
+
+      <View
+        accessibilityLabel="Expense distribution"
+        style={{
+          flexDirection: "row",
+          height: 10,
+          marginTop: 14,
+          borderRadius: 5,
+          overflow: "hidden",
+          backgroundColor: theme.colors.surfaceSecondary,
+        }}
+      >
+        {expenses.map((expense, index) => (
+          <View
+            key={expense.id}
+            style={{
+              width: `${expense.percentage}%`,
+              height: "100%",
+              backgroundColor: accents[index % accents.length],
+            }}
+          />
+        ))}
+      </View>
+
+      <View style={{ marginTop: 14, gap: 8 }}>
+        {expenses.map((expense, index) => (
+          <View key={expense.id} style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+            <View
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: 4,
+                backgroundColor: accents[index % accents.length],
+              }}
+            />
+            <Text variant="caption" numberOfLines={1} style={{ flex: 1 }}>
+              {expense.category}
+            </Text>
+            <CurrencyText amount={expense.amount} variant="caption" />
+          </View>
+        ))}
+      </View>
+    </Card>
   );
 }
