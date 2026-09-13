@@ -20,9 +20,7 @@ type TabNavigation = {
     type: "tabPress" | "tabLongPress";
     target: string;
     canPreventDefault?: boolean;
-  }) => {
-    defaultPrevented?: boolean;
-  };
+  }) => unknown;
   navigate: (name: string, params?: object) => void;
 };
 
@@ -68,7 +66,7 @@ export function PayPilotTabBar({ state, navigation }: PayPilotTabBarProps) {
               type: "tabPress",
               target: route.key,
               canPreventDefault: true,
-            });
+            }) as { defaultPrevented?: boolean };
 
             if (!isFocused && !event.defaultPrevented) {
               navigation.navigate(route.name, route.params);
