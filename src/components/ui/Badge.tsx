@@ -3,7 +3,7 @@ import { StyleSheet, View, type ViewProps } from "react-native";
 import { useTheme } from "@/theme";
 import { Text, type TextTone } from "./Text";
 
-export type BadgeTone = Exclude<TextTone, "primary" | "inverse"> | "neutral";
+export type BadgeTone = Exclude<TextTone, "primary" | "secondary" | "muted" | "inverse"> | "neutral";
 export type BadgeProps = Omit<ViewProps, "children"> & { children: ReactNode; tone?: BadgeTone };
 
 export function Badge({ children, tone = "neutral", style, ...props }: BadgeProps) {
