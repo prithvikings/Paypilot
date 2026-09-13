@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Card } from "@/components/ui/Card";
 import { CurrencyText } from "@/components/financial/CurrencyText";
 import { StatusIndicator } from "@/components/financial/StatusIndicator";
