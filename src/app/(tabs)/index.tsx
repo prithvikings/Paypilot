@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Screen } from "@/components/ui/Screen";
 import { Text } from "@/components/ui/Text";
 import {
@@ -18,35 +18,67 @@ import { useTheme } from "@/theme";
 export default function HomeScreen() {
   const router = useRouter();
   const { theme } = useTheme();
-  const { financialOverview, financialStatus, obligations, expenses, debtSummary, recentTransactions } = demoFinancialData;
+  const {
+    financialOverview,
+    financialStatus,
+    dueThisMonth,
+    expenses,
+    debtSummary,
+    obligations,
+    recentTransactions,
+  } = demoFinancialData;
 
   return (
-    <Screen contentContainerStyle={{ paddingTop: theme.spacing.sm }}>
+    <Screen
+      contentContainerStyle={{
+        paddingTop: theme.spacing.xs,
+        paddingBottom: theme.spacing["4xl"],
+      }}
+    >
       <HomeHeader firstName={demoFinancialData.user.firstName} />
 
-      <View style={{ gap: theme.spacing["2xl"] }}>
+      <View style={styles.content}>
+        <FinancialStatusCard message="Your finances look stable this month." />
+
         <FinancialOverview
           income={financialOverview.income}
           expenses={financialOverview.expenses}
           available={financialOverview.available}
         />
 
-        <FinancialStatusCard message={financialStatus.message} />
+        <ObligationsCard
+          amount={dueThisMonth.amount}
+          label={dueThisMonth.label}
+        />
 
-        <ObligationsCard obligations={obligations} />
-
-        <ExpenseBreakdown total={financialOverview.expenses} expenses={expenses} />
-
-        <DebtSummary totalOutstanding={debtSummary.totalOutstanding} debts={obligations} />
+        <View style={styles.twoColumn}>
+          <ExpenseBreakdown total={financialOverview.expenses} expenses={expenses} />
+          <DebtSummary totalOutstanding={debtSummary.totalOutstanding} debts={obligations} />
+        </View>
 
         <RecentTransactions transactions={recentTransactions} />
 
         <AskPayPilotCTA onPress={() => router.push("/(tabs)/ask")} />
 
-        <Text variant="caption" tone="muted" style={{ textAlign: "center", paddingBottom: theme.spacing.sm }}>
+        <Text
+          variant="caption"
+          tone="muted"
+          style={{ textAlign: "center", marginTop: theme.spacing.xs }}
+        >
           {demoFinancialData.demoLabel}
         </Text>
       </View>
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  content: {
+    gap: 16,
+  },
+  twoColumn: {
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "flex-start",
+  },
+});
