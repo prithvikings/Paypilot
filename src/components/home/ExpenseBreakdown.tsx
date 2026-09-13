@@ -10,19 +10,18 @@ type ExpenseBreakdownProps = {
   expenses: readonly DemoExpense[];
 };
 
-const accents = [
-  "#F56F8C",
-  "#F7A735",
-  "#3E8BEA",
-  "#8967E8",
-  "#4CCB9A",
-  "#E889B6",
-  "#6B9FE8",
-  "#9AA6B8",
-] as const;
-
 export function ExpenseBreakdown({ total, expenses }: ExpenseBreakdownProps) {
   const { theme } = useTheme();
+  const accents = [
+    theme.colors.danger,
+    theme.colors.warning,
+    theme.colors.accent,
+    theme.colors.info,
+    theme.colors.success,
+    theme.colors.accentPressed,
+    theme.colors.textMuted,
+    theme.colors.borderStrong,
+  ];
 
   return (
     <Card style={{ padding: 14, flex: 1, minWidth: 0, borderRadius: 20 }}>
