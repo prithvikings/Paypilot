@@ -9,6 +9,7 @@ import {
   FinancialOverview,
   FinancialStatusCard,
   HomeHeader,
+  ObligationsCard,
   RecentTransactions,
 } from "@/components/home";
 import { demoFinancialData } from "@/data/demoFinancialData";
@@ -20,9 +21,7 @@ export default function HomeScreen() {
   const { financialOverview, financialStatus, obligations, expenses, debtSummary, recentTransactions } = demoFinancialData;
 
   return (
-    <Screen
-      contentContainerStyle={{ paddingTop: theme.spacing.sm }}
-    >
+    <Screen contentContainerStyle={{ paddingTop: theme.spacing.sm }}>
       <HomeHeader firstName={demoFinancialData.user.firstName} />
 
       <View style={{ gap: theme.spacing["2xl"] }}>
@@ -34,7 +33,7 @@ export default function HomeScreen() {
 
         <FinancialStatusCard message={financialStatus.message} />
 
-        <ObligationsCardWithData obligations={obligations} />
+        <ObligationsCard obligations={obligations} />
 
         <ExpenseBreakdown total={financialOverview.expenses} expenses={expenses} />
 
@@ -50,8 +49,4 @@ export default function HomeScreen() {
       </View>
     </Screen>
   );
-}
-
-function ObligationsCardWithData({ obligations }: { obligations: typeof demoFinancialData.obligations }) {
-  return <ObligationsCard obligations={obligations} />;
 }
