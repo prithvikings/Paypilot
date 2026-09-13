@@ -39,6 +39,10 @@ export const demoFinancialData = {
     label: "Needs attention",
     message: "Your finances are manageable, with one overdue payment to address.",
   },
+  dueThisMonth: {
+    amount: 11000,
+    label: "Across 2 obligations",
+  },
   obligations: [
     {
       id: "credit-card",
