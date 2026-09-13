@@ -1,4 +1,4 @@
-import { createContext, useContext, type PropsWithChildren } from "react";
+import { createContext, createElement, useContext, type PropsWithChildren } from "react";
 import type { TextStyle, ViewStyle } from "react-native";
 
 export const colors = {
@@ -118,7 +118,7 @@ export type ThemeProviderProps = PropsWithChildren<{ mode?: ThemeMode }>;
 
 export function ThemeProvider({ mode = "light", children }: ThemeProviderProps) {
   const theme = mode === "dark" ? darkTheme : lightTheme;
-  return <ThemeContext.Provider value={{ theme, mode }}>{children}</ThemeContext.Provider>;
+  return createElement(ThemeContext.Provider, { value: { theme, mode } }, children);
 }
 
 export function useTheme(): ThemeContextValue {
