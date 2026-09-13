@@ -15,6 +15,13 @@ const statusConfig: Record<FinancialStatus, { label: string; tone: BadgeTone }> 
 export function StatusIndicator({ status }: { status: FinancialStatus }) {
   const { theme } = useTheme();
   const config = statusConfig[status];
-  const dotColor = { success: theme.colors.success, warning: theme.colors.warning, danger: theme.colors.danger, info: theme.colors.info }[config.tone];
-  return <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}><View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: dotColor }} /><Badge tone={config.tone}>{config.label}</Badge></View>;
+  const dotColor: Record<BadgeTone, string> = {
+    neutral: theme.colors.textSecondary,
+    accent: theme.colors.accent,
+    success: theme.colors.success,
+    warning: theme.colors.warning,
+    danger: theme.colors.danger,
+    info: theme.colors.info,
+  };
+  return <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}><View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: dotColor[config.tone] }} /><Badge tone={config.tone}>{config.label}</Badge></View>;
 }
