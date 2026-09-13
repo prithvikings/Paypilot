@@ -1,43 +1,41 @@
 import { SymbolView } from "expo-symbols";
 import { Pressable, StyleSheet, View } from "react-native";
-import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Text } from "@/components/ui/Text";
 import { useTheme } from "@/theme";
 
-type TabConfig = {
-  label: string;
-  icon: {
-    ios: string;
-    android: string;
-    web: string;
+type TabRoute = {
+  key: string;
+  name: string;
+  params?: object;
+};
+
+type TabState = {
+  index: number;
+  routes: TabRoute[];
+};
+
+type TabNavigation = {
+  emit: (event: { type: "tabPress" | "tabLongPress"; target: string; canPreventDefault?: boolean }) => {
+    defaultPrevented: boolean;
   };
+  navigate: (name: string, params?: object) => void;
 };
 
-const TAB_CONFIG: Record<string, TabConfig> = {
-  index: {
-    label: "Home",
-    icon: { ios: "house", android: "home", web: "home" },
-  },
-  plan: {
-    label: "Plan",
-    icon: { ios: "doc.text", android: "receipt_long", web: "receipt_long" },
-  },
-  ask: {
-    label: "Ask",
-    icon: { ios: "sparkles", android: "auto_awesome", web: "auto_awesome" },
-  },
-  activity: {
-    label: "Activity",
-    icon: { ios: "clock", android: "schedule", web: "schedule" },
-  },
-  profile: {
-    label: "Profile",
-    icon: { ios: "person", android: "person", web: "person" },
-  },
+type PayPilotTabBarProps = {
+  state: TabState;
+  navigation: TabNavigation;
 };
 
-export function PayPilotTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+const TAB_LABELS: Record<string, string> = {
+  index: "Home",
+  plan: "Plan",
+  ask: "Ask",
+  activity: "Activity",
+  profile: "Profile",
+};
+
+export function PayPilotTabBar({ state, navigation }: PayPilotTabBarProps) {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
 
@@ -54,12 +52,11 @@ export function PayPilotTabBar({ state, descriptors, navigation }: BottomTabBarP
     >
       <View style={styles.tabs}>
         {state.routes.map((route) => {
-          const config = TAB_CONFIG[route.name];
-          if (!config) return null;
+          const label = TAB_LABELS[route.name];
+          if (!label) return null;
 
-          const { options } = descriptors[route.key];
           const isFocused = state.index === state.routes.indexOf(route);
-          const color = isFocused ? theme.colors.accent : theme.colors.muted;
+          const color = isFocused ? theme.colors.accent : theme.colors.textMuted;
           const isAsk = route.name === "ask";
 
           const onPress = () => {
@@ -85,7 +82,7 @@ export function PayPilotTabBar({ state, descriptors, navigation }: BottomTabBarP
             <Pressable
               key={route.key}
               accessibilityRole="tab"
-              accessibilityLabel={options.tabBarAccessibilityLabel ?? config.label}
+              accessibilityLabel={label === "Ask" ? "Ask PayPilot" : label}
               accessibilityState={{ selected: isFocused }}
               onPress={onPress}
               onLongPress={onLongPress}
@@ -109,15 +106,18 @@ export function PayPilotTabBar({ state, descriptors, navigation }: BottomTabBarP
                     ]}
                   >
                     <SymbolView
-                      name={config.icon}
+                      name="sparkles"
                       size={26}
-                      tintColor={isFocused ? theme.colors.inverse : theme.colors.accent}
+                      tintColor={isFocused ? theme.colors.white : theme.colors.accent}
                     />
                   </View>
                 </View>
               ) : (
                 <View style={styles.iconWrapper}>
-                  <SymbolView name={config.icon} size={24} tintColor={color} />
+                  {route.name === "index" && <SymbolView name="house" size={24} tintColor={color} />}
+                  {route.name === "plan" && <SymbolView name="doc.text" size={24} tintColor={color} />}
+                  {route.name === "activity" && <SymbolView name="clock" size={24} tintColor={color} />}
+                  {route.name === "profile" && <SymbolView name="person" size={24} tintColor={color} />}
                 </View>
               )}
 
@@ -126,7 +126,7 @@ export function PayPilotTabBar({ state, descriptors, navigation }: BottomTabBarP
                 tone={isFocused ? "accent" : "muted"}
                 style={isAsk ? styles.askLabel : undefined}
               >
-                {config.label}
+                {label}
               </Text>
             </Pressable>
           );
